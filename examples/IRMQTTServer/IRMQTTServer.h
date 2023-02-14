@@ -61,7 +61,7 @@ const uint8_t kNrOfIrTxGpios = 1;
 // Default GPIO the IR LED is connected to/controlled by. GPIO 4 = D2.
 // For an ESP-01 we suggest you use RX/GPIO3/Pin 7. i.e. kDefaultIrLed = 3
 // Note: A value of -1 means unused.
-const int8_t kDefaultIrLed = 4;  // <=- CHANGE_ME (optional)
+const int8_t kDefaultIrLed = 13;  // <=- CHANGE_ME (optional)
 
 // **DANGER** Optional flag to invert the output. (default = false)
 //            `false`: The LED is illuminated when the GPIO is HIGH.
@@ -74,6 +74,9 @@ const bool kInvertTxOutput = false;
 // Default GPIO the IR demodulator is connected to/controlled by. GPIO 14 = D5.
 // Note: GPIO 16 won't work on the ESP8266 as it does not have interrupts.
 const int8_t kDefaultIrRx = 14;  // <=- CHANGE_ME (optional)
+
+// Define IR transmitting indicator gpio.
+#define INDICATOR 16
 
 // Enable/disable receiving/decoding IR messages entirely.
 // Note: IR_RX costs about 40k+ of program memory.
@@ -119,7 +122,7 @@ const IPAddress kSubnetMask = IPAddress(255, 255, 255, 0);
 #ifndef MQTT_BUFFER_SIZE
 // A value of 768 handles most cases easily. Use 1024 or more when using
 // `REPORT_RAW_UNKNOWNS` is recommended.
-#define MQTT_BUFFER_SIZE 768  // Default MQTT packet buffer size.
+#define MQTT_BUFFER_SIZE 1024  // Default MQTT packet buffer size.
 #endif  // MQTT_BUFFER_SIZE
 const uint16_t kMqttBufferSize = MQTT_BUFFER_SIZE;  // Packet Buffer size.
 const uint32_t kMqttReconnectTime = 5000;  // Delay(ms) between reconnect tries.
