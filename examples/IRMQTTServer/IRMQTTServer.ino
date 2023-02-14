@@ -2308,6 +2308,8 @@ void setup(void) {
     irrecv->enableIRIn(IR_RX_PULLUP);  // Start the receiver
   }
 #endif  // IR_RX
+  pinMode(INDICATOR, OUTPUT);
+  digitalWrite(INDICATOR, LOW);
   // Wait a bit for things to settle.
   delay(500);
 
@@ -3020,7 +3022,10 @@ bool sendIRCode(IRsend *irsend, decode_type_t const ir_type,
   // Turn off IR capture if we need to.
 #if IR_RX && DISABLE_CAPTURE_WHILE_TRANSMITTING
   if (irrecv != NULL) irrecv->disableIRIn();  // Stop the IR receiver
+  pinMode(rx_gpio, OUTPUT);  //Modify for AI-Win A1
+  digitalWrite(rx_gpio, LOW);  //Modify for AI-Win A1
 #endif  // IR_RX && DISABLE_CAPTURE_WHILE_TRANSMITTING
+  digitalWrite(INDICATOR, HIGH);
   // send the IR message.
   switch (ir_type) {
 #if SEND_PRONTO
@@ -3044,9 +3049,11 @@ bool sendIRCode(IRsend *irsend, decode_type_t const ir_type,
       else  // protocols with <= 64 bits
         success = irsend->send(ir_type, code, bits, repeat);
   }
+  digitalWrite(INDICATOR, LOW);
 #if IR_RX && DISABLE_CAPTURE_WHILE_TRANSMITTING
   // Turn IR capture back on if we need to.
   if (irrecv != NULL) irrecv->enableIRIn();  // Restart the receiver
+  pinMode(rx_gpio, INPUT);  //Modify for AI-Win A1 
 #endif  // IR_RX && DISABLE_CAPTURE_WHILE_TRANSMITTING
   lastSendTime = millis();
   // Release the lock.
@@ -3439,11 +3446,16 @@ bool sendClimate(const String topic_prefix, const bool retain,
 #if IR_RX && DISABLE_CAPTURE_WHILE_TRANSMITTING
     // Turn IR capture off if we need to.
     if (irrecv != NULL) irrecv->disableIRIn();  // Stop the IR receiver
+    pinMode(rx_gpio, OUTPUT);  //Modify for AI-Win A1
+    digitalWrite(rx_gpio, LOW);  //Modify for AI-Win A1
 #endif  // IR_RX && DISABLE_CAPTURE_WHILE_TRANSMITTING
+    digitalWrite(INDICATOR, HIGH);
     lastClimateSucceeded = ac->sendAc();
+    digitalWrite(INDICATOR, LOW);
 #if IR_RX && DISABLE_CAPTURE_WHILE_TRANSMITTING
     // Turn IR capture back on if we need to.
     if (irrecv != NULL) irrecv->enableIRIn();  // Restart the receiver
+    pinMode(rx_gpio, INPUT);  //Modify for AI-Win A1 
 #endif  // IR_RX && DISABLE_CAPTURE_WHILE_TRANSMITTING
     if (lastClimateSucceeded) hasClimateBeenSent = true;
     success &= lastClimateSucceeded;
